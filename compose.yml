@@ -1,0 +1,36 @@
+x-env_tty: &env_tty
+  env_file:
+    - .env
+  tty: true
+
+x-bind_mount: &bind_mount
+  volumes:
+    - type: bind
+      source: .
+      target: /home/${HOST_USER:-$LOGNAME}/app
+  user: ${HOST_USER:-$LOGNAME}
+  working_dir: /home/${HOST_USER:-$LOGNAME}/app
+  platform: linux/amd64
+
+services:
+  app:
+    container_name: cuda_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+        HOST_USER: ${HOST_USER:-$LOGNAME}
+        HOST_GROUP: ${HOST_GROUP:-$LOGNAME}
+        TZ: ${TZ:-Etc/UTC}
+    <<: [*bind_mount, *env_tty]
+    entrypoint: zsh
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
