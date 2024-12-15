@@ -1,20 +1,26 @@
-[tool.poetry]
-name = "your_project"
+[project]
+name = "app"
 version = "0.1.0"
-description = ""
-authors = ["Ryo Arai <ryo.p4499@gmail.com>"]
+description = "Add your description here"
 readme = "README.md"
-packages = [{ include = "mypackage", from = "src" }]
+authors = [{ name = "Ryo Arai", email = "ryo.p4499@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = []
 
-[tool.poetry.dependencies]
-python = "^3.11"
+[tool.uv]
+default-groups = ["dev", "test"]
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.8.0"
-mypy = "^1.13.0"
-pytest = "^8.3.3"
-pytest-cov = "^6.0.0"
+[dependency-groups]
+dev = ["mypy>=1.13.0", "mypy-extensions>=1.0.0", "ruff>=0.8.3"]
+test = ["pytest-mock>=3.14.0", "pytest>=8.3.4", "pytest-cov>=6.0.0"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[project.optional-dependencies]
+cli = ["rich", "click"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mypackage"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = ["-sv"]

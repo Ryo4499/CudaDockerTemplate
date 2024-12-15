@@ -9,6 +9,7 @@ ARG PYTHON_VERSION='3.11'
 
 ENV TZ $TZ
 ENV DEBIAN_FRONTEND noninteractive
+ENV UV_LINK_MODE copy
 
 RUN apt-get update && \
     apt-get install -y sudo \
@@ -36,17 +37,11 @@ USER ${HOST_USER}
 
 WORKDIR /home/${HOST_USER}/app
 
-ENV PATH="$PATH:/home/${HOST_USER}/.local/bin" \
-    PATH="$PATH:/home/${HOST_USER}/.venv/bin" \
-    PATH="$PATH:/home/${HOST_USER}/.local/pipx/venvs/poetry/bin"
+ENV PATH="$PATH:/home/${HOST_USER}/.local/bin"
 
 RUN pipx ensurepath && \
-    pipx install poetry && \
-    poetry config virtualenvs.in-project false && \
-    poetry config virtualenvs.create true && \
-    poetry config cache-dir /tmp/poetry_cache
+    pipx install uv
 
+COPY --chown=${HOST_USER}:${HOST_GROUP} pyproject.toml uv.lock .python-version .
 
-COPY --chown=${HOST_USER}:${HOST_GROUP} pyproject.toml poetry.lock .
-
-RUN poetry install --no-root
+RUN uv sync

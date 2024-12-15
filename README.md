@@ -15,5 +15,7 @@ vi .env
 docker compose build
 docker compose up -d
 docker compose exec app sh
+uv run hello.py
+uvx --with pytest-cov pytest-mock pytest
 docker compose down
 ```
