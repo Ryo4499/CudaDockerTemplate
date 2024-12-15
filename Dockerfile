@@ -32,9 +32,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /home/${HOST_USER}/app
-
 USER ${HOST_USER}
+
+WORKDIR /home/${HOST_USER}/app
 
 ENV PATH="$PATH:/home/${HOST_USER}/.local/bin" \
     PATH="$PATH:/home/${HOST_USER}/.venv/bin" \
