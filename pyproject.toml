@@ -15,7 +15,10 @@ dev = ["mypy>=1.13.0", "mypy-extensions>=1.0.0", "ruff>=0.8.3"]
 test = ["pytest-mock>=3.14.0", "pytest>=8.3.4", "pytest-cov>=6.0.0"]
 
 [project.optional-dependencies]
-cli = ["rich", "click"]
+cli = [
+    "click>=8.1.7",
+    "rich>=13.9.4",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mypackage"]
